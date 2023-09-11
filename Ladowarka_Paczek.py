@@ -16,7 +16,7 @@ for i in range(ilosc_paczek):
             print("Waga paczki nieprawidłowa, elementy mogą ważyć od 1 kg do max 10 kg \n")
             print("Dodawanie paczek zostaje przerwane, a wszystkie paczki zostały wysłane\n")
             break
-waga_suma += waga
+        waga_suma += waga
         if aktualna_waga + waga <= 20:
             aktualna_waga += waga
             break
