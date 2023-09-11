@@ -31,3 +31,9 @@ if aktualna_waga <= waga_min:
     paczka_min = paczki + 1
 
 paczki += 1
+
+print("\nZostało wysłanych:", paczki, "paczek")
+print("W tym: ")
+print("    * Łączna waga elementów wyniosła:", waga_suma, "kg")
+print("    * Suma pustych kilogramów wyniosła:", (20 * paczki) - waga_suma)
+print("    * Paczka z największą liczbą pustych kilogramów ma nr", paczka_min, "z ilością", waga_min, "kg")
