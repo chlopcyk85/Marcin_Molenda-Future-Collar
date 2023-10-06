@@ -13,17 +13,22 @@ def odczyt_pliku(nazwa_pliku):
         return dane
     except FileNotFoundError:
         print(f"Nie znaleziono pliku wejściowego {nazwa_pliku}")
+        sys.exit(1)
 
 
 # zmiany w pliku na nowe argumenty
 def zmiany_w_pliku(dane, zmiany):
     try:
-        for zmiana in zmiany:
-            x, y, value = zmiana.split(",")
-            x, y = int(x), int(y)
-            dane[x][y] = value
-    except TypeError:
-        print("Podano złe argumenty")
+        try:
+            for zmiana in zmiany:
+                x, y, value = zmiana.split(",")
+                x, y = int(x), int(y)
+                dane[x][y] = value
+        except TypeError:
+            print("Podano złe argumenty")
+    except ValueError:
+        print("Złe argumenty, dane nie zostały zmienione!")
+        sys.exit(1)
     except IndexError:
         print("\nZły INDEX argumentu, dane nie zostały zmienione!\n")
 
@@ -37,6 +42,11 @@ def zapis_pliku(nazwa_pliku, dane):
                 writer.writerow(row)
     except TypeError:
         print("Podano złe argumenty do zapisu pliku")
+
+
+if len(sys.argv) < 2:
+    print("Nieprawidłowa ilość argumentów, dane nie zostały zmienione")
+    sys.exit(1)
 
 # pobranie argumentów przez terminal
 plik_wejscia = sys.argv[1]
