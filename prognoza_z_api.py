@@ -51,7 +51,7 @@ def main():
     tomorrow = today + timedelta(days=1)
     next_day = tomorrow.strftime("%Y-%m-%d")
     searched_date = input(
-        "\nPodaj dzień na który mam sprawdzić pogodę, np. 2023-11-03: "
+        "\nPodaj dzień na który mam sprawdzić pogodę (miasto Kielce), np. 2023-11-03: "
     )
     if searched_date:
         searched_date = searched_date
