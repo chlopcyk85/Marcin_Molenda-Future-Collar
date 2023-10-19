@@ -23,25 +23,39 @@ def pogoda(data):
     rain_sum = data["daily"]["rain_sum"]
     rain_sum = sum(rain_sum)
     if rain_sum > 0:
-        print("Będzie padać :( ")
+        print("* Będzie padać :( * ")
     elif rain_sum == 0:
-        print("Nie będzie padać :) ")
+        print(" * Nie będzie padać :) * ")
     else:
         print("Nie wiem.")
 
 
-def wynik_zapisz(data):
-    with open("pogoda.txt", "w") as plik:
-        plik.write(json.dumps(data))
+def wynik_zapisz(data, file_name):
+    with open(file_name, "w") as plik:
+        json.dump(data, plik)
 
 
-def wynik_odczytaj(data):
+def wynik_odczytaj(file_name):
     try:
-        with open("pogoda.txt", "r") as plik:
+        with open(file_name, "r") as plik:
             data = json.load(plik)
+
+        if data["history"]:
+            print(f"\n Pogoda pobrana z pliku {file_name}")
             return data
     except FileNotFoundError:
         return None
+
+
+def dodaj_json(data_to_add, file_name):
+    existing_data = wynik_odczytaj(file_name)
+    if existing_data:
+        existing_data["history"].append(data_to_add)
+    else:
+        existing_data = {"history": [data_to_add]}
+
+    wynik_zapisz(existing_data, file_name)
+    print("Wynik został dodany do pliku 'pogoda.json'")
 
 
 def main():
@@ -51,33 +65,18 @@ def main():
     tomorrow = today + timedelta(days=1)
     next_day = tomorrow.strftime("%Y-%m-%d")
     searched_date = input(
-        "\nPodaj dzień na który mam sprawdzić pogodę (miasto Kielce), np. 2023-11-03: "
+        "\n - Podaj dzień na który mam sprawdzić pogodę (miasto Kielce), np. 2023-11-03: "
     )
-    if searched_date:
-        searched_date = searched_date
-
-    else:
+    if not searched_date:
         print(
-            f"\nBrak podania daty, została pobrana pogoda na dzień jutrzejszy tj. {next_day}"
+            f"\n - Brak podania daty, została pobrana pogoda na dzień jutrzejszy tj. {next_day}"
         )
         searched_date = next_day
 
     data = api(searched_date, latitude, longitude)
-    data2 = api(next_day, latitude, longitude)
-    pobrane_dane = wynik_odczytaj(data)
-
-    if pobrane_dane:
-        try:
-            pogoda(data)
-        except TypeError:
-            print(f"\nZostała pobrana pogoda na dzień jutrzejszy tj. {next_day}")
-            pogoda(data2)
-        print(f'Pogoda dla dnia {searched_date} pobrana z pliku "pogoda.txt"')
-    else:
-        api(searched_date, latitude, longitude)
-
-    wynik_odczytaj(data)
-    wynik_zapisz(data)
+    # wynik_odczytaj("pogoda.json")
+    pogoda(data)
+    dodaj_json(data, "pogoda.json")
 
 
 if __name__ == "__main__":
